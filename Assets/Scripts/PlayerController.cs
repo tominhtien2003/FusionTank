@@ -5,6 +5,7 @@ public class PlayerController : NetworkBehaviour
 {
     [SerializeField] float moveSpeed = 10f;
     [SerializeField] Rocket rocketPrefab;
+    [SerializeField] Transform bulletHolder;
 
     [Networked] TickTimer attackCooldown { get; set; }
 
@@ -45,6 +46,7 @@ public class PlayerController : NetworkBehaviour
             }
         }
     }
+    
     #region Idle
     public void HandleStateIdle()
     {
@@ -65,8 +67,12 @@ public class PlayerController : NetworkBehaviour
     {
         if (HasStateAuthority)
         {
-            Runner.Spawn(rocketPrefab, transform.position + directionPlayer, Quaternion.LookRotation(directionPlayer));
+            Runner.Spawn(rocketPrefab, bulletHolder.position, Quaternion.LookRotation(directionPlayer));
         }
     }
     #endregion
+    public void Death()
+    {
+        Runner.Despawn(Object);
+    }
 }

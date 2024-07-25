@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class BasicSpawner : SimulationBehaviour, INetworkRunnerCallbacks
 {
-    private NetworkRunner _runner;
+    private NetworkRunner _networkRunner;
     [SerializeField] NetworkPrefabRef playerPrefab;
     private Dictionary<PlayerRef, NetworkObject> spawnCharacter = new Dictionary<PlayerRef, NetworkObject>();
 
@@ -15,9 +15,9 @@ public class BasicSpawner : SimulationBehaviour, INetworkRunnerCallbacks
 
     async void StartGame(GameMode mode)
     {
-        _runner = gameObject.AddComponent<NetworkRunner>();
-        _runner.ProvideInput = true;
-        _runner.AddCallbacks(this);
+        _networkRunner = gameObject.AddComponent<NetworkRunner>();
+        _networkRunner.ProvideInput = true;
+        _networkRunner.AddCallbacks(this);
 
         var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
         var sceneInfo = new NetworkSceneInfo();
@@ -25,7 +25,7 @@ public class BasicSpawner : SimulationBehaviour, INetworkRunnerCallbacks
         {
             sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
         }
-        await _runner.StartGame(new StartGameArgs()
+        await _networkRunner.StartGame(new StartGameArgs()
         {
             GameMode = mode,
             SessionName = "iam_tien",
